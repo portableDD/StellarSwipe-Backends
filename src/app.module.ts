@@ -5,6 +5,7 @@ import { stellarConfig } from "./config/stellar.config";
 import { databaseConfig, redisConfig } from "./config/database.config";
 import { appConfig } from "./config/app.config";
 import { StellarConfigService } from "./config/stellar.service";
+import { HealthController } from "./health/health.controller";
 
 @Module({
   imports: [
@@ -21,20 +22,20 @@ import { StellarConfigService } from "./config/stellar.service";
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         type: "postgres" as const,
-        host: configService.get("database.host"),
-        port: configService.get("database.port"),
-        username: configService.get("database.username"),
-        password: configService.get("database.password"),
-        database: configService.get("database.database"),
-        synchronize: configService.get("database.synchronize"),
-        logging: configService.get("database.logging"),
+        host: configService.get<string>("database.host"),
+        port: configService.get<number>("database.port"),
+        username: configService.get<string>("database.username"),
+        password: configService.get<string>("database.password"),
+        database: configService.get<string>("database.database"),
+        synchronize: configService.get<boolean>("database.synchronize"),
+        logging: configService.get<boolean>("database.logging"),
         entities: ["dist/**/*.entity{.ts,.js}"],
         migrations: ["dist/migrations/*{.ts,.js}"],
         subscribers: ["dist/subscribers/*{.ts,.js}"],
-        ssl: configService.get("database.ssl"),
       }),
     }),
   ],
+  controllers: [HealthController],
   providers: [StellarConfigService],
   exports: [StellarConfigService],
 })
