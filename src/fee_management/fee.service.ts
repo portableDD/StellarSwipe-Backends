@@ -49,6 +49,7 @@ export class FeesService {
   private readonly platformWallet!: string;
   private readonly stellarServer: StellarSdk.Horizon.Server;
   private readonly platformKeypair!: StellarSdk.Keypair;
+  private readonly networkPassphrase!: string;
 
   constructor(
     @InjectRepository(FeeTransaction)
@@ -81,6 +82,12 @@ export class FeesService {
       this.platformKeypair = StellarSdk.Keypair.fromSecret(platformSecret);
       this.platformWallet = this.platformKeypair.publicKey();
     }
+    
+    this.networkPassphrase = this.configService.get<string>(
+        'STELLAR_NETWORK_PASSPHRASE',
+        StellarSdk.Networks.TESTNET,
+    );
+    this.logger.debug(`Network passphrase: ${this.networkPassphrase}`);
   }
 
   /**
@@ -223,7 +230,7 @@ export class FeesService {
       // Build transaction
       const transaction = new StellarSdk.TransactionBuilder(platformAccount, {
         fee: StellarSdk.BASE_FEE,
-        networkPassphrase: StellarSdk.Networks.TESTNET,
+        networkPassphrase: this.networkPassphrase,
       })
         .addOperation(
           StellarSdk.Operation.payment({
