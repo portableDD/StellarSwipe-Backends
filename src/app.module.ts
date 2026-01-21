@@ -12,6 +12,7 @@ import { BetaModule } from './beta/beta.module';
 import { TradesModule } from './trades/trades.module';
 import { SignalsModule } from './signals/signals.module';
 import { UsersModule } from './users/users.module';
+import { PortfolioModule } from './portfolio/portfolio.module';
 import { configSchema } from './config/schemas/config.schema';
 import configuration from './config/configuration';
 import { HealthController } from './health/health.controller';
@@ -69,6 +70,7 @@ import { HealthController } from './health/health.controller';
     SignalsModule,
     BetaModule,
     TradesModule,
+    PortfolioModule,
   ],
   controllers: [HealthController],
   providers: [StellarConfigService],

@@ -113,6 +113,7 @@ async function bootstrap() {
     await sentryService.flush();
     await app.close();
   });
+
 }
 
 bootstrap().catch((err) => {

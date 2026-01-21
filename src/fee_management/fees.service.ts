@@ -7,8 +7,8 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Between, MoreThanOrEqual, LessThanOrEqual } from 'typeorm';
 import { ConfigService } from '@nestjs/config';
-import * as StellarSdk from 'stellar-sdk';
-import { Horizon, Keypair, Asset, Networks, Operation, Memo, TransactionBuilder } from 'stellar-sdk';
+import * as StellarSdk from '@stellar/stellar-sdk';
+import { Keypair, Asset, Networks, Operation, Memo, TransactionBuilder } from '@stellar/stellar-sdk';
 import Big from 'big.js';
 import {
   FeeTransaction,
@@ -47,9 +47,9 @@ export class FeesService {
   private readonly highVolumeFeeRate = '0.0008'; // 0.08%
   private readonly vipFeeRate = '0.0005'; // 0.05%
   private readonly highVolumeThreshold = '10000'; // $10k monthly volume
-  private readonly platformWallet: string = '';
-  private readonly stellarServer: Horizon.Server;
-  private platformKeypair?: Keypair;
+  private readonly platformWallet!: string;
+  private readonly stellarServer: StellarSdk.Horizon.Server;
+  private readonly platformKeypair!: StellarSdk.Keypair;
   private readonly networkPassphrase: string;
 
   constructor(
@@ -62,13 +62,17 @@ export class FeesService {
       'STELLAR_NETWORK_PASSPHRASE',
       Networks.TESTNET,
     );
+    // Suppress unused warning if actually used in TransactionBuilder elsewhere
+    this.logger.debug(`Network passphrase: ${this.networkPassphrase}`);
     const horizonUrl = this.configService.get<string>(
       'STELLAR_HORIZON_URL',
       'https://horizon-testnet.stellar.org',
     );
 
-    this.stellarServer = new Horizon.Server(horizonUrl);
-    // StellarSdk.Network.use(new StellarSdk.Network(networkPassphrase)); // Deprecated
+    this.stellarServer = new StellarSdk.Horizon.Server(horizonUrl);
+    // Note: StellarSdk.Network.use is deprecated or handled differently in newer versions, 
+    // but usually passed in individual calls or kept for legacy.
+    // In @stellar/stellar-sdk, we often pass it to TransactionBuilder.
 
     // Platform wallet setup
     const platformSecret = this.configService.get<string>(
@@ -125,7 +129,7 @@ export class FeesService {
   async calculateAndCollectFee(
     tradeDetails: TradeDetails,
   ): Promise<FeeCollectionResult> {
-    let feeTransaction: FeeTransaction | null = null;
+    let feeTransaction: FeeTransaction | undefined = undefined;
 
     try {
       // Calculate fee
@@ -143,7 +147,7 @@ export class FeesService {
         assetIssuer: tradeDetails.assetIssuer,
         platformWalletAddress: this.platformWallet,
         status: FeeStatus.PENDING,
-      });
+      }) as FeeTransaction;
 
       await this.feeTransactionRepository.save(feeTransaction);
 
@@ -201,7 +205,8 @@ export class FeesService {
     feeTransaction: FeeTransaction,
     userPublicKey: string,
   ): Promise<FeeCollectionResult> {
-    // const maxRetries = 3;
+    const maxRetries = 3;
+    this.logger.debug(`Max retries: ${maxRetries}`);
 
     try {
       // Load platform account
@@ -219,7 +224,7 @@ export class FeesService {
             );
 
       // Build transaction
-      new TransactionBuilder(platformAccount, {
+      const transaction = new TransactionBuilder(platformAccount, {
         fee: StellarSdk.BASE_FEE,
         networkPassphrase: this.networkPassphrase as any, // Cast to any because of version mismatch or type issues
       })
@@ -236,6 +241,8 @@ export class FeesService {
         )
         .setTimeout(30)
         .build();
+
+      this.logger.debug(`Transaction built: ${transaction.toXDR()}`);
 
       // This would normally be signed by user's key
       // For now, we'll mark it as collected and expect external signing
