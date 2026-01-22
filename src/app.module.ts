@@ -13,9 +13,10 @@ import { TradesModule } from './trades/trades.module';
 import { RiskManagerModule } from './risk/risk-manager.module';
 import { PortfolioModule } from './portfolio/portfolio.module';
 import { UsersModule } from './users/users.module';
+import { SignalsModule } from './signals/signals.module';
 import { configSchema } from './config/schemas/config.schema';
 import configuration from './config/configuration';
-import { HealthController } from './health/health.controller';
+import { HealthModule } from './health/health.module';
 
 @Module({
   imports: [
@@ -62,17 +63,18 @@ import { HealthController } from './health/health.controller';
         entities: ['dist/**/*.entity{.ts,.js}'],
         migrations: ['dist/migrations/*{.ts,.js}'],
         subscribers: ['dist/subscribers/*{.ts,.js}'],
-        ssl: configService.get<boolean>('database.ssl'),
+        ssl: configService.get<boolean>('database.ssl') ?? false,
       }),
     }),
     // Feature Modules
+    UsersModule,
+    SignalsModule,
     BetaModule,
     TradesModule,
     RiskManagerModule,
     PortfolioModule,
-    UsersModule,
+    HealthModule,
   ],
-  controllers: [HealthController],
   providers: [StellarConfigService],
   exports: [StellarConfigService],
 })
