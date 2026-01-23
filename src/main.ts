@@ -33,14 +33,18 @@ async function bootstrap() {
   const host = configService.get("app.host");
   const apiPrefix = configService.get("app.apiPrefix");
   const apiVersion = configService.get("app.apiVersion");
-  const corsConfig = configService.get("app.cors");
+  const corsOrigin = configService.get("app.corsOrigin");
+  const corsCredentials = configService.get("app.corsCredentials");
   const globalPrefix = `${apiPrefix}/${apiVersion}`;
 
   // Set global prefix
   app.setGlobalPrefix(globalPrefix);
 
   // Enable CORS
-  app.enableCors(corsConfig);
+  app.enableCors({
+    origin: corsOrigin,
+    credentials: corsCredentials,
+  });
 
   // Global pipes
   app.useGlobalPipes(
