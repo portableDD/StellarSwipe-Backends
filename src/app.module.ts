@@ -26,7 +26,11 @@ import { CacheModule } from './cache/cache.module';
 import { redisCacheConfig } from './config/redis.config';
 import { SorobanModule } from './soroban/soroban.module';
 import { SdexModule } from './sdex/sdex.module';
+ dash
+import { DashboardModule } from './dashboard/dashboard.module';
+
 import { AuthModule } from './auth/auth.module';
+ main
 
 @Module({
   imports: [
@@ -99,6 +103,7 @@ import { AuthModule } from './auth/auth.module';
     TradesModule,
     RiskManagerModule,
     PortfolioModule,
+    DashboardModule,
     AiValidationModule,
     HealthModule,
     SdexModule,
