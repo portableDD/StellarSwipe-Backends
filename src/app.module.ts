@@ -33,7 +33,11 @@ import { StellarModule } from './stellar/stellar.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 
 import { AuthModule } from './auth/auth.module';
+ Metrics-Aggregation
 import { AnalyticsModule } from './analytics/analytics.module';
+=======
+import { WebsocketModule } from './websocket/websocket.module';
+ main
  main
  main
 
@@ -117,6 +121,7 @@ import { AnalyticsModule } from './analytics/analytics.module';
     StellarModule,
     CacheModule,
     AuthModule,
+    WebsocketModule,
   ],
   providers: [StellarConfigService],
   exports: [StellarConfigService],
