@@ -33,6 +33,7 @@ import { StellarModule } from './stellar/stellar.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 
 import { AuthModule } from './auth/auth.module';
+import { AnalyticsModule } from './analytics/analytics.module';
  main
  main
 
@@ -108,6 +109,7 @@ import { AuthModule } from './auth/auth.module';
     RiskManagerModule,
     PortfolioModule,
     DashboardModule,
+    AnalyticsModule,
     AiValidationModule,
     HealthModule,
     SdexModule,
