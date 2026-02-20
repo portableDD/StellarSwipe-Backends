@@ -29,6 +29,7 @@ import { SdexModule } from './sdex/sdex.module';
 import { StellarModule } from './stellar/stellar.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { RatingsModule } from './ratings/ratings.module';
+import { ComplianceModule } from './compliance/compliance.module';
 import { AuthModule } from './auth/auth.module';
 import { AnalyticsModule } from './analytics/analytics.module';
 import { WebsocketModule } from './websocket/websocket.module';
@@ -106,6 +107,7 @@ import { WebsocketModule } from './websocket/websocket.module';
     PortfolioModule,
     DashboardModule,
     RatingsModule,
+    ComplianceModule,
     AnalyticsModule,
     AiValidationModule,
     HealthModule,
