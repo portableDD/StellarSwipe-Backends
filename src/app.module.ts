@@ -30,6 +30,7 @@ import { StellarModule } from './stellar/stellar.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { RatingsModule } from './ratings/ratings.module';
 import { ComplianceModule } from './compliance/compliance.module';
+import { RateLimitModule } from './common/rate-limit.module';
 import { AuthModule } from './auth/auth.module';
 import { AnalyticsModule } from './analytics/analytics.module';
 import { WebsocketModule } from './websocket/websocket.module';
@@ -108,6 +109,7 @@ import { WebsocketModule } from './websocket/websocket.module';
     DashboardModule,
     RatingsModule,
     ComplianceModule,
+    RateLimitModule,
     AnalyticsModule,
     AiValidationModule,
     HealthModule,
