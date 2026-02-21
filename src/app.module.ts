@@ -42,7 +42,7 @@ import { ProvidersModule } from './providers/providers.module';
 import { MlModule } from './ml/ml.module';
 import { ValidationModule } from './common/validation/validation.module';
 import { ScalingModule } from './scaling/scaling.module';
-
+import { FeesModule } from './fee_management/fees.module';
 
 @Module({
   imports: [
@@ -60,10 +60,7 @@ import { ScalingModule } from './scaling/scaling.module';
         xaiConfig,
         configuration,
       ],
-      envFilePath: [
-        `.env.${process.env.NODE_ENV || 'development'}`,
-        '.env',
-      ],
+      envFilePath: [`.env.${process.env.NODE_ENV || 'development'}`, '.env'],
       cache: true,
       validationSchema: configSchema,
       validationOptions: {
@@ -134,6 +131,7 @@ import { ScalingModule } from './scaling/scaling.module';
     ProvidersModule,
     MlModule,
     ScalingModule,
+    FeesModule,
   ],
   providers: [StellarConfigService],
   exports: [StellarConfigService],
